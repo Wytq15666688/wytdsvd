@@ -1,0 +1,149 @@
+
+1.所有的教师的成绩查询页面没有
+2.教秘没有选课和加课功能
+3.老师没有信息维护的功能
+4.学生没有申请缓考的功能
+5.辅导员、专职教师、班主任这三个身份怎么区分？（尤其是修改个人信息的时候，是否就需要三个界面了）
+6.教学秘书分配教室也没有
+
+
+
+
+1. TeacherTimeTable（教师课表）:
+从后端获取：
+< api/ teacher/ timetable >   // 需要获得此时登陆的老师课表的数据库
+  
+tableData: [
+        [
+          {
+            courseName: "",
+            teacherName: "",
+            location: ""
+          }
+        ]
+      ]
+
+
+--------------------------------------------
+
+2. StudentTimeTable(学生课表)：
+从后端获取：
+< api/ student/ timetable >    // 需要获此时登陆的学生课表的数据库
+  
+tableData: [
+        [
+          {
+            courseName: "",
+            teacherName: "",
+            location: ""
+          }
+        ]
+      ]
+
+---------------------------------------------
+
+3. 老师端：成绩录入
+
+（1）从后端获取页数 以及 特定索引的内容
+export const getPageCount = (courseName, studentName) =>
+  ajax.get("/teacher/grade/page/count", {
+    courseName: courseName,
+    studentName: studentName
+  });
+
+格式：
+{
+   courseName: courseName,
+    studentName: studentName
+}
+
+
+export const getPage = (index, courseName, studentName) =>
+  ajax.get("/teacher/grade/page/" + index, {
+    courseName: courseName,
+    studentName: studentName
+  });
+
+格式：
+
+{
+    courseName: courseName,
+    studentName: studentName
+}
+
+// getPageCount 用于获取页面总数，而 getPage 则用于获取特定索引的页面内容。
+
+（2）从后端获取ID对应学生的 所选中的 课程名+学生名 的全部信息
+export const get = id => ajax.pureGet("/teacher/grade/" + id);
+{
+         studentCourseId:  studentCourseId
+          courseName:        courseName
+          studentName:      studentName
+          dailyScore:           dailyScore
+          examScore:          examScore
+          score：                 score
+}
+
+ (3) 前端传给后端的
+export const update = entity => ajax.put("/teacher/grade", entity)
+
+{
+         studentCourseId:  studentCourseId, //学号
+          courseName:        courseName,
+          studentName:      studentName,   
+          dailyScore:           dailyScore,	// 平时分
+          examScore:          examScore,      //考试成绩
+          score：                 score,		// 最终成绩
+}
+-------------------------------------------------------------------------
+
+4. TeacherCourse
+
+export const list = () => ajax.pureGet("/teacher/course/list");
+
+{
+        id: id,            	//课程
+        name: name, 	//课程名
+        grade: grade,	// 年级
+        credit: credit;	// 学分
+         time: time	//上课时间
+         location:location //上课地点
+          selectCount: selectCount//选课人数
+
+}
+
+---------------------------------------------------------------------------
+Login：
+
+向后端发送的登录信息格式
+{
+  username: username // 学号，工号，用户号
+ password： password // 密码
+  userType： userType  //用户类型 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
